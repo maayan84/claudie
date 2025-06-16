@@ -1,606 +1,417 @@
+```html
 <!DOCTYPE html>
-
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מעקב תזונה AI</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        .btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        .input {
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 16px;
-            width: 100%;
-            transition: border-color 0.3s ease;
-        }
-        .input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        .progress-bar {
-            background: #e1e5e9;
-            border-radius: 10px;
-            height: 12px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            height: 100%;
-            transition: width 0.5s ease;
-        }
-        .meal-item {
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-right: 4px solid #667eea;
-        }
-        .macro-card {
-            text-align: center;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 5px;
-        }
-        .protein { background: #ffe6e6; color: #d63384; }
-        .carbs { background: #fff3cd; color: #b08800; }
-        .fat { background: #e7e3ff; color: #6f42c1; }
-        .animate-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .5; }
-        }
-        .icon {
-            width: 24px;
-            height: 24px;
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 8px;
-        }
-        .header-icon {
-            width: 40px;
-            height: 40px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מעקב תזונה AI</title>
+<style>
+* { box-sizing: border-box; }
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 20px;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+min-height: 100vh;
+}
+.container {
+max-width: 800px;
+margin: 0 auto;
+background: white;
+border-radius: 15px;
+padding: 25px;
+box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.header {
+text-align: center;
+margin-bottom: 30px;
+}
+.header h1 {
+color: #333;
+margin: 0;
+font-size: 2.5rem;
+}
+.btn {
+background: linear-gradient(45deg, #667eea, #764ba2);
+color: white;
+border: none;
+padding: 12px 24px;
+border-radius: 8px;
+cursor: pointer;
+font-weight: bold;
+margin: 5px;
+}
+.btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+.input {
+border: 2px solid #e1e5e9;
+border-radius: 8px;
+padding: 12px;
+font-size: 16px;
+width: 100%;
+margin: 10px 0;
+}
+.card {
+background: #f8f9fa;
+border-radius: 10px;
+padding: 20px;
+margin: 15px 0;
+border-right: 4px solid #667eea;
+}
+.progress-bar {
+background: #e1e5e9;
+border-radius: 10px;
+height: 12px;
+margin: 10px 0;
+}
+.progress-fill {
+background: linear-gradient(45deg, #667eea, #764ba2);
+height: 100%;
+border-radius: 10px;
+transition: width 0.5s ease;
+}
+.meal-item {
+background: #fff;
+border-radius: 8px;
+padding: 15px;
+margin: 10px 0;
+border-right: 4px solid #28a745;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.macro-row {
+display: flex;
+gap: 15px;
+justify-content: center;
+margin: 20px 0;
+}
+.macro-card {
+text-align: center;
+padding: 15px;
+border-radius: 10px;
+min-width: 100px;
+}
+.protein { background: #ffe6e6; color: #d63384; }
+.carbs { background: #fff3cd; color: #b08800; }
+.fat { background: #e7e3ff; color: #6f42c1; }
+.hidden { display: none; }
+</style>
 </head>
 <body>
-    <div id="root"></div>
+<div class="container">
+<div class="header">
+<h1>🧠 מעקב תזונה AI</h1>
+<p>בינה מלאכותית שתמיד מבינה ועונה</p>
+</div>
 
-```
-<script type="text/babel">
-    const { useState, useEffect } = React;
+<!-- יעד יומי -->
+<div class="card">
+<h3>🎯 יעד יומי</h3>
+<input type="number" id="dailyGoal" class="input" value="2000" style="width: 120px;">
+<span>קלוריות</span>
+<button class="btn" onclick="clearDay()">🗑️ נקה יום</button>
+</div>
 
-    const NutritionTracker = () => {
-        const [dailyGoal, setDailyGoal] = useState(2000);
-        const [meals, setMeals] = useState([]);
-        const [currentMeal, setCurrentMeal] = useState('');
-        const [showRecommendations, setShowRecommendations] = useState(false);
-        const [isAnalyzing, setIsAnalyzing] = useState(false);
+<!-- התקדמות -->
+<div class="card">
+<h3>📊 התקדמות יומית</h3>
+<div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+<span>סה"כ:</span>
+<span id="totalDisplay"><strong>0/2000</strong></span>
+</div>
+<div class="progress-bar">
+<div id="progressFill" class="progress-fill" style="width: 0%"></div>
+</div>
 
-        // טעינת נתונים מהדפדפן
-        useEffect(() => {
-            const savedMeals = localStorage.getItem('nutritionMeals');
-            const savedGoal = localStorage.getItem('dailyGoal');
-            if (savedMeals) setMeals(JSON.parse(savedMeals));
-            if (savedGoal) setDailyGoal(parseInt(savedGoal));
-        }, []);
+<div class="macro-row">
+<div class="macro-card protein">
+<div id="proteinTotal" style="font-size: 1.5rem; font-weight: bold;">0ג</div>
+<div style="font-size: 0.9rem;">חלבונים</div>
+</div>
+<div class="macro-card carbs">
+<div id="carbsTotal" style="font-size: 1.5rem; font-weight: bold;">0ג</div>
+<div style="font-size: 0.9rem;">פחמימות</div>
+</div>
+<div class="macro-card fat">
+<div id="fatTotal" style="font-size: 1.5rem; font-weight: bold;">0ג</div>
+<div style="font-size: 0.9rem;">שומנים</div>
+</div>
+</div>
+</div>
 
-        // שמירת נתונים בדפדפן
-        useEffect(() => {
-            localStorage.setItem('nutritionMeals', JSON.stringify(meals));
-        }, [meals]);
+<!-- הוספת ארוחה -->
+<div class="card" style="background: linear-gradient(45deg, #28a745, #20c997); color: white;">
+<h3>➕ AI חכם - תמיד מבין הכל</h3>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<input type="text" id="mealInput" class="input" placeholder="כל דבר: 2 קבב גדול מטוגן, ארוחה, חטיף..." style="flex: 1; min-width: 300px;">
+<button class="btn" onclick="addMeal()">✨ הוסף</button>
+</div>
+<div style="background: rgba(255,255,255,0.9); padding: 12px; border-radius: 8px; margin-top: 15px; color: #333; font-size: 0.9rem;">
+🧠 <strong>AI מבין הכל:</strong> כמויות (2, שני), גדלים (גדול/קטן), אופן הכנה (מטוגן/אפוי), ואפילו מנחש אם לא מכיר!
+</div>
+</div>
 
-        useEffect(() => {
-            localStorage.setItem('dailyGoal', dailyGoal.toString());
-        }, [dailyGoal]);
+<!-- רשימת ארוחות -->
+<div id="mealsContainer" class="hidden">
+<div class="card">
+<h3>🧠 ארוחות שזוהו על ידי AI</h3>
+<div id="mealsList"></div>
+</div>
+</div>
 
-        // AI לזיהוי מזון
-        const analyzeWithAI = (text) => {
-            const input = text.toLowerCase().trim();
-            
-            let totalCalories = 0;
-            let totalProtein = 0;
-            let totalCarbs = 0;
-            let totalFat = 0;
-            let foundItems = [];
-            
-            // מילון מזונות מקיף
-            const foods = {
-                'פיתה': { cal: 165, prot: 5, carb: 33, fat: 1 },
-                'לחמנייה': { cal: 120, prot: 4, carb: 22, fat: 2 },
-                'לחמניה': { cal: 120, prot: 4, carb: 22, fat: 2 },
-                'טוסט': { cal: 80, prot: 3, carb: 15, fat: 1 },
-                'בורקס': { cal: 300, prot: 8, carb: 30, fat: 18 },
-                'קבב': { cal: 280, prot: 22, carb: 2, fat: 18 },
-                'קציצה': { cal: 220, prot: 18, carb: 8, fat: 14 },
-                'שניצל': { cal: 320, prot: 25, carb: 20, fat: 18 },
-                'עוף': { cal: 180, prot: 30, carb: 0, fat: 6 },
-                'נקניק': { cal: 180, prot: 8, carb: 4, fat: 14 },
-                'נקניקיה': { cal: 180, prot: 8, carb: 4, fat: 14 },
-                'שווארמה': { cal: 650, prot: 35, carb: 45, fat: 35 },
-                'המבורגר': { cal: 850, prot: 35, carb: 50, fat: 45 },
-                'טחינה': { cal: 120, prot: 3, carb: 4, fat: 11 },
-                'חומוס': { cal: 50, prot: 2, carb: 4, fat: 3 },
-                'ביצה': { cal: 70, prot: 6, carb: 1, fat: 5 },
-                'גבינה': { cal: 100, prot: 7, carb: 1, fat: 8 },
-                'אורז': { cal: 150, prot: 3, carb: 30, fat: 0 },
-                'ציפס': { cal: 200, prot: 3, carb: 25, fat: 12 },
-                'בירה': { cal: 150, prot: 1, carb: 13, fat: 0 },
-                'קפה': { cal: 10, prot: 0, carb: 2, fat: 0 },
-                'שוקולד': { cal: 150, prot: 2, carb: 17, fat: 9 },
-                'סלט': { cal: 25, prot: 1, carb: 5, fat: 0 },
-                'בננה': { cal: 105, prot: 1, carb: 27, fat: 0 },
-                'תפוח': { cal: 80, prot: 0, carb: 21, fat: 0 },
-                'פלאפל': { cal: 60, prot: 2, carb: 6, fat: 3 },
-                'יוגורט': { cal: 100, prot: 6, carb: 12, fat: 3 },
-                'קוקה': { cal: 140, prot: 0, carb: 39, fat: 0 },
-                'מיץ': { cal: 110, prot: 1, carb: 26, fat: 0 },
-                'במבה': { cal: 160, prot: 6, carb: 13, fat: 11 }
-            };
+<!-- המלצות -->
+<div class="card">
+<h3>📈 המלצות AI</h3>
+<button class="btn" onclick="toggleRecommendations()">הצג המלצות</button>
+<div id="recommendations" class="hidden" style="margin-top: 15px;">
+<div id="recommendationsList"></div>
+</div>
+</div>
 
-            // פיצול המשפט למילים
-            const words = input.split(/[\s,\+\-]+/).filter(w => w.length > 1);
-            
-            // AI מעבד כל מילה
-            for (let i = 0; i < words.length; i++) {
-                const word = words[i];
-                
-                // זיהוי כמות
-                let quantity = 1;
-                const numberMatch = word.match(/(\d+)/);
-                if (numberMatch) {
-                    quantity = parseInt(numberMatch[1]);
-                    continue;
-                }
-                
-                // מספרים בעברית
-                const hebrewNumbers = {
-                    'שני': 2, 'שתי': 2, 'שלוש': 3, 'ארבע': 4, 'חמש': 5,
-                    'שש': 6, 'שבע': 7, 'שמונה': 8, 'תשע': 9, 'עשר': 10
-                };
-                
-                for (const [hebrewNum, num] of Object.entries(hebrewNumbers)) {
-                    if (word.includes(hebrewNum)) {
-                        quantity = num;
-                        continue;
-                    }
-                }
-                
-                // בדיקה אם המילה הקודמת הייתה מספר
-                if (i > 0) {
-                    const prevWord = words[i - 1];
-                    const prevNumber = prevWord.match(/(\d+)/);
-                    if (prevNumber) {
-                        quantity = parseInt(prevNumber[1]);
-                    } else {
-                        for (const [hebrewNum, num] of Object.entries(hebrewNumbers)) {
-                            if (prevWord.includes(hebrewNum)) {
-                                quantity = num;
-                                break;
-                            }
-                        }
-                    }
-                }
-                
-                // זיהוי מזון
-                let foundFood = null;
-                let foodName = '';
-                
-                // חיפוש מדויק
-                if (foods[word]) {
-                    foundFood = foods[word];
-                    foodName = word;
-                } else {
-                    // חיפוש חלקי
-                    for (const [key, value] of Object.entries(foods)) {
-                        if (word.includes(key) || key.includes(word)) {
-                            foundFood = value;
-                            foodName = key;
-                            break;
-                        }
-                    }
-                }
-                
-                if (foundFood) {
-                    // זיהוי אופן הכנה
-                    let calorieMultiplier = 1;
-                    let cookingMethod = '';
-                    
-                    if (input.includes('מטוגן') || input.includes('מטוגנת')) {
-                        calorieMultiplier = 1.4;
-                        cookingMethod = ' מטוגן';
-                    } else if (input.includes('אפוי') || input.includes('אפויה')) {
-                        calorieMultiplier = 0.8;
-                        cookingMethod = ' אפוי';
-                    } else if (input.includes('צלוי') || input.includes('צלויה')) {
-                        calorieMultiplier = 0.85;
-                        cookingMethod = ' צלוי';
-                    }
-                    
-                    // זיהוי גודל
-                    let sizeMultiplier = 1;
-                    let size = '';
-                    
-                    if (input.includes('גדול') || input.includes('גדולה')) {
-                        sizeMultiplier = 1.5;
-                        size = ' גדול';
-                    } else if (input.includes('קטן') || input.includes('קטנה')) {
-                        sizeMultiplier = 0.7;
-                        size = ' קטן';
-                    }
-                    
-                    // חישוב סופי
-                    const baseCalories = foundFood.cal * calorieMultiplier * sizeMultiplier;
-                    const itemCalories = baseCalories * quantity;
-                    const itemProtein = foundFood.prot * quantity * sizeMultiplier;
-                    const itemCarbs = foundFood.carb * quantity * sizeMultiplier;
-                    const itemFat = foundFood.fat * quantity * sizeMultiplier;
-                    
-                    totalCalories += itemCalories;
-                    totalProtein += itemProtein;
-                    totalCarbs += itemCarbs;
-                    totalFat += itemFat;
-                    
-                    const displayName = quantity > 1 ? `${quantity} ${foodName}${size}${cookingMethod}` : `${foodName}${size}${cookingMethod}`;
-                    foundItems.push(`${displayName} (${Math.round(itemCalories)} קל')`);
-                }
-            }
-            
-            // אם לא נמצא כלום - AI מנחש
-            if (foundItems.length === 0) {
-                let guessCalories = 200;
-                let guessProtein = 8;
-                let guessCarbs = 25;
-                let guessFat = 8;
-                
-                if (input.includes('ארוחה') || input.includes('מנה')) {
-                    guessCalories = 400;
-                    guessProtein = 25;
-                    guessCarbs = 35;
-                    guessFat = 20;
-                    foundItems.push('ארוחה מעורבת (ניחוש AI)');
-                } else if (input.includes('חטיף')) {
-                    guessCalories = 150;
-                    guessProtein = 3;
-                    guessCarbs = 20;
-                    guessFat = 8;
-                    foundItems.push('חטיף (ניחוש AI)');
-                } else if (input.includes('משקה')) {
-                    guessCalories = 100;
-                    guessProtein = 0;
-                    guessCarbs = 25;
-                    guessFat = 0;
-                    foundItems.push('משקה מתוק (ניחוש AI)');
-                } else {
-                    foundItems.push(`"${input}" (ניחוש AI)`);
-                }
-                
-                totalCalories = guessCalories;
-                totalProtein = guessProtein;
-                totalCarbs = guessCarbs;
-                totalFat = guessFat;
-            }
-            
-            return {
-                calories: Math.round(totalCalories),
-                protein: Math.round(totalProtein),
-                carbs: Math.round(totalCarbs),
-                fat: Math.round(totalFat),
-                items: foundItems
-            };
-        };
+<div style="text-align: center; margin-top: 30px; color: #666;">
+<p>🤖 <strong>מעקב תזונה AI</strong> - מבוסס בינה מלאכותית</p>
+<p>הנתונים נשמרים במכשיר שלך</p>
+</div>
+</div>
 
-        const totalNutrition = meals.reduce((total, meal) => ({
-            calories: total.calories + meal.calories,
-            protein: total.protein + meal.protein,
-            carbs: total.carbs + meal.carbs,
-            fat: total.fat + meal.fat
-        }), { calories: 0, protein: 0, carbs: 0, fat: 0 });
+<script>
+let meals = JSON.parse(localStorage.getItem('nutritionMeals') || '[]');
+let dailyGoal = parseInt(localStorage.getItem('dailyGoal') || '2000');
 
-        const addMeal = () => {
-            if (!currentMeal.trim()) return;
-            
-            setIsAnalyzing(true);
-            
-            setTimeout(() => {
-                const analysis = analyzeWithAI(currentMeal);
-                
-                const newMeal = {
-                    id: Date.now(),
-                    description: analysis.items.join(' + '),
-                    calories: analysis.calories,
-                    protein: analysis.protein,
-                    carbs: analysis.carbs,
-                    fat: analysis.fat,
-                    time: new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })
-                };
-                
-                setMeals([...meals, newMeal]);
-                setCurrentMeal('');
-                setIsAnalyzing(false);
-            }, 1000);
-        };
+// טעינה ראשונית
+document.getElementById('dailyGoal').value = dailyGoal;
+updateDisplay();
 
-        const deleteMeal = (id) => {
-            setMeals(meals.filter(meal => meal.id !== id));
-        };
+// AI לזיהוי מזון
+function analyzeWithAI(text) {
+const input = text.toLowerCase().trim();
+const foods = {
+'פיתה': { cal: 165, prot: 5, carb: 33, fat: 1 },
+'לחמנייה': { cal: 120, prot: 4, carb: 22, fat: 2 },
+'טוסט': { cal: 80, prot: 3, carb: 15, fat: 1 },
+'בורקס': { cal: 300, prot: 8, carb: 30, fat: 18 },
+'קבב': { cal: 280, prot: 22, carb: 2, fat: 18 },
+'קציצה': { cal: 220, prot: 18, carb: 8, fat: 14 },
+'שניצל': { cal: 320, prot: 25, carb: 20, fat: 18 },
+'עוף': { cal: 180, prot: 30, carb: 0, fat: 6 },
+'נקניק': { cal: 180, prot: 8, carb: 4, fat: 14 },
+'שווארמה': { cal: 650, prot: 35, carb: 45, fat: 35 },
+'המבורגר': { cal: 850, prot: 35, carb: 50, fat: 45 },
+'טחינה': { cal: 120, prot: 3, carb: 4, fat: 11 },
+'חומוס': { cal: 50, prot: 2, carb: 4, fat: 3 },
+'ביצה': { cal: 70, prot: 6, carb: 1, fat: 5 },
+'גבינה': { cal: 100, prot: 7, carb: 1, fat: 8 },
+'אורז': { cal: 150, prot: 3, carb: 30, fat: 0 },
+'ציפס': { cal: 200, prot: 3, carb: 25, fat: 12 },
+'בירה': { cal: 150, prot: 1, carb: 13, fat: 0 },
+'קפה': { cal: 10, prot: 0, carb: 2, fat: 0 },
+'שוקולד': { cal: 150, prot: 2, carb: 17, fat: 9 },
+'סלט': { cal: 25, prot: 1, carb: 5, fat: 0 },
+'בננה': { cal: 105, prot: 1, carb: 27, fat: 0 },
+'תפוח': { cal: 80, prot: 0, carb: 21, fat: 0 }
+};
 
-        const clearDay = () => {
-            if (confirm('האם אתה בטוח שברצונך למחוק את כל הארוחות?')) {
-                setMeals([]);
-            }
-        };
+let totalCalories = 0, totalProtein = 0, totalCarbs = 0, totalFat = 0;
+let foundItems = [];
+const words = input.split(/[\s,\+\-]+/).filter(w => w.length > 1);
 
-        const getRecommendations = () => {
-            const remaining = dailyGoal - totalNutrition.calories;
-            if (remaining <= 0) return ['🎯 השגת את היעד המושלם!'];
-            if (remaining > 800) return ['🍔 המבורגר מלא (850 קל\')'];
-            if (remaining > 600) return ['🥙 שווארמה מלאה (650 קל\')'];
-            if (remaining > 300) return ['🍗 שניצל עם תוספות (320 קל\')'];
-            if (remaining > 150) return ['🥪 בורקס טעים (300 קל\')'];
-            return ['🍎 חטיף קל וטעים'];
-        };
+for (let i = 0; i < words.length; i++) {
+const word = words[i];
+let quantity = 1;
 
-        const progressPercentage = Math.min((totalNutrition.calories / dailyGoal) * 100, 100);
+// זיהוי כמות
+const numberMatch = word.match(/(\d+)/);
+if (numberMatch) {
+quantity = parseInt(numberMatch[1]);
+continue;
+}
 
-        return (
-            <div className="container">
-                <div className="card">
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '25px' }}>
-                        <div className="header-icon">🧠</div>
-                        <div>
-                            <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#333', margin: '0' }}>
-                                מעקב תזונה AI
-                            </h1>
-                            <p style={{ color: '#667eea', margin: '5px 0 0 0' }}>
-                                בינה מלאכותית שתמיד מבינה ועונה
-                            </p>
-                        </div>
-                    </div>
+const hebrewNumbers = { 'שני': 2, 'שתי': 2, 'שלוש': 3, 'ארבע': 4, 'חמש': 5 };
+for (const [hebrewNum, num] of Object.entries(hebrewNumbers)) {
+if (word.includes(hebrewNum)) {
+quantity = num;
+continue;
+}
+}
 
-                    {/* יעד יומי */}
-                    <div className="card" style={{ background: 'linear-gradient(45deg, #667eea, #764ba2)', color: 'white' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-                            <span className="icon">🎯</span>
-                            <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>יעד יומי</span>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flexWrap: 'wrap' }}>
-                            <input
-                                type="number"
-                                value={dailyGoal}
-                                onChange={(e) => setDailyGoal(Number(e.target.value))}
-                                className="input"
-                                style={{ width: '120px', textAlign: 'center' }}
-                            />
-                            <span style={{ fontWeight: 'bold' }}>קלוריות</span>
-                            <button
-                                onClick={clearDay}
-                                style={{ 
-                                    background: '#dc3545', 
-                                    color: 'white', 
-                                    border: 'none', 
-                                    padding: '8px 16px', 
-                                    borderRadius: '6px',
-                                    cursor: 'pointer',
-                                    fontSize: '14px'
-                                }}
-                            >
-                                🗑️ נקה יום
-                            </button>
-                        </div>
-                    </div>
+if (i > 0) {
+const prevWord = words[i - 1];
+const prevNumber = prevWord.match(/(\d+)/);
+if (prevNumber) quantity = parseInt(prevNumber[1]);
+}
 
-                    {/* התקדמות */}
-                    <div className="card">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                            <span style={{ fontWeight: 'bold', fontSize: '1.3rem' }}>📊 התקדמות יומית</span>
-                            <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#667eea' }}>
-                                {totalNutrition.calories}/{dailyGoal}
-                            </span>
-                        </div>
-                        
-                        <div className="progress-bar" style={{ marginBottom: '20px' }}>
-                            <div 
-                                className="progress-fill"
-                                style={{ width: `${progressPercentage}%` }}
-                            ></div>
-                        </div>
-                        
-                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                            <div className="macro-card protein">
-                                <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{totalNutrition.protein}ג</div>
-                                <div style={{ fontSize: '0.9rem' }}>חלבונים</div>
-                            </div>
-                            <div className="macro-card carbs">
-                                <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{totalNutrition.carbs}ג</div>
-                                <div style={{ fontSize: '0.9rem' }}>פחמימות</div>
-                            </div>
-                            <div className="macro-card fat">
-                                <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{totalNutrition.fat}ג</div>
-                                <div style={{ fontSize: '0.9rem' }}>שומנים</div>
-                            </div>
-                        </div>
-                    </div>
+// זיהוי מזון
+let foundFood = null, foodName = '';
+if (foods[word]) {
+foundFood = foods[word];
+foodName = word;
+} else {
+for (const [key, value] of Object.entries(foods)) {
+if (word.includes(key) || key.includes(word)) {
+foundFood = value;
+foodName = key;
+break;
+}
+}
+}
 
-                    {/* הוספת ארוחה */}
-                    <div className="card" style={{ background: 'linear-gradient(45deg, #28a745, #20c997)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', color: 'white' }}>
-                            <span className="icon">➕</span>
-                            <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>AI חכם - תמיד מבין הכל</span>
-                            {isAnalyzing && <span className="animate-pulse" style={{ marginRight: '10px' }}>🤖 מנתח...</span>}
-                        </div>
-                        
-                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                            <input
-                                type="text"
-                                value={currentMeal}
-                                onChange={(e) => setCurrentMeal(e.target.value)}
-                                placeholder="כל דבר: 2 קבב גדול מטוגן, ארוחה, חטיף, משקה..."
-                                className="input"
-                                style={{ flex: '1', minWidth: '300px' }}
-                                onKeyPress={(e) => e.key === 'Enter' && !isAnalyzing && addMeal()}
-                                disabled={isAnalyzing}
-                            />
-                            <button
-                                onClick={addMeal}
-                                disabled={isAnalyzing}
-                                className="btn"
-                                style={{ whiteSpace: 'nowrap' }}
-                            >
-                                {isAnalyzing ? '🤖 מנתח...' : '✨ הוסף'}
-                            </button>
-                        </div>
-                        
-                        <div style={{ 
-                            background: 'rgba(255,255,255,0.9)', 
-                            padding: '12px', 
-                            borderRadius: '8px', 
-                            marginTop: '15px',
-                            fontSize: '0.9rem',
-                            color: '#333'
-                        }}>
-                            🧠 <strong>AI מבין הכל:</strong> כמויות (2, שני), גדלים (גדול/קטן), אופן הכנה (מטוגן/אפוי/צלוי), ואפילו מנחש אם לא מכיר את המזון!
-                        </div>
-                    </div>
+if (foundFood) {
+let calorieMultiplier = 1;
+let cookingMethod = '';
+if (input.includes('מטוגן')) { calorieMultiplier = 1.4; cookingMethod = ' מטוגן'; }
+else if (input.includes('אפוי')) { calorieMultiplier = 0.8; cookingMethod = ' אפוי'; }
+else if (input.includes('צלוי')) { calorieMultiplier = 0.85; cookingMethod = ' צלוי'; }
 
-                    {/* רשימת ארוחות */}
-                    {meals.length > 0 && (
-                        <div className="card">
-                            <h3 style={{ marginBottom: '20px', fontSize: '1.3rem' }}>
-                                🧠 ארוחות שזוהו על ידי AI
-                            </h3>
-                            {meals.map(meal => (
-                                <div key={meal.id} className="meal-item">
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-                                        <div style={{ flex: '1', minWidth: '200px' }}>
-                                            <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>{meal.description}</div>
-                                            <div style={{ fontSize: '0.9rem', color: '#666' }}>{meal.time}</div>
-                                        </div>
-                                        <div style={{ textAlign: 'center', minWidth: '120px' }}>
-                                            <div style={{ fontSize: '1.3rem', fontWeight: 'bold', color: '#667eea' }}>
-                                                {meal.calories} קלוריות
-                                            </div>
-                                            <div style={{ fontSize: '0.8rem', color: '#666' }}>
-                                                ח{meal.protein} | פ{meal.carbs} | ש{meal.fat}
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={() => deleteMeal(meal.id)}
-                                            style={{
-                                                background: '#dc3545',
-                                                color: 'white',
-                                                border: 'none',
-                                                borderRadius: '50%',
-                                                width: '30px',
-                                                height: '30px',
-                                                cursor: 'pointer',
-                                                fontSize: '14px'
-                                            }}
-                                        >
-                                            ✕
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+let sizeMultiplier = 1;
+let size = '';
+if (input.includes('גדול')) { sizeMultiplier = 1.5; size = ' גדול'; }
+else if (input.includes('קטן')) { sizeMultiplier = 0.7; size = ' קטן'; }
 
-                    {/* המלצות */}
-                    <div className="card" style={{ background: 'linear-gradient(45deg, #fd7e14, #ffc107)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', color: 'white' }}>
-                                <span className="icon">📈</span>
-                                <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>המלצות AI חכמות</span>
-                            </div>
-                            <button
-                                onClick={() => setShowRecommendations(!showRecommendations)}
-                                style={{
-                                    background: 'rgba(255,255,255,0.2)',
-                                    color: 'white',
-                                    border: '1px solid white',
-                                    borderRadius: '6px',
-                                    padding: '8px 16px',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                {showRecommendations ? 'הסתר' : 'הצג'}
-                            </button>
-                        </div>
-                        
-                        {showRecommendations && (
-                            <div>
-                                <div style={{ 
-                                    background: 'rgba(255,255,255,0.9)', 
-                                    padding: '12px', 
-                                    borderRadius: '8px', 
-                                    marginBottom: '15px',
-                                    color: '#333'
-                                }}>
-                                    🎯 נותרו <strong>{Math.max(0, dailyGoal - totalNutrition.calories)} קלוריות</strong> להשלמת היעד היומי
-                                </div>
-                                {getRecommendations().map((rec, index) => (
-                                    <div key={index} style={{
-                                        background: 'rgba(255,255,255,0.9)',
-                                        padding: '15px',
-                                        borderRadius: '8px',
-                                        marginBottom: '10px',
-                                        borderRight: '4px solid #fd7e14',
-                                        color: '#333'
-                                    }}>
-                                        {rec}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+const itemCalories = foundFood.cal * calorieMultiplier * sizeMultiplier * quantity;
+totalCalories += itemCalories;
+totalProtein += foundFood.prot * quantity * sizeMultiplier;
+totalCarbs += foundFood.carb * quantity * sizeMultiplier;
+totalFat += foundFood.fat * quantity * sizeMultiplier;
 
-                    {/* פוטר */}
-                    <div style={{ textAlign: 'center', marginTop: '30px', color: '#666', fontSize: '0.9rem' }}>
-                        <p>🤖 <strong>מעקב תזונה
+const displayName = quantity > 1 ? `${quantity} ${foodName}${size}${cookingMethod}` : `${foodName}${size}${cookingMethod}`;
+foundItems.push(`${displayName} (${Math.round(itemCalories)} קל')`);
+}
+}
+
+// אם לא נמצא כלום
+if (foundItems.length === 0) {
+let guessCalories = 200, guessProtein = 8, guessCarbs = 25, guessFat = 8;
+if (input.includes('ארוחה')) { guessCalories = 400; guessProtein = 25; guessCarbs = 35; guessFat = 20; foundItems.push('ארוחה מעורבת (ניחוש AI)'); }
+else if (input.includes('חטיף')) { guessCalories = 150; guessProtein = 3; guessCarbs = 20; guessFat = 8; foundItems.push('חטיף (ניחוש AI)'); }
+else { foundItems.push(`"${input}" (ניחוש AI)`); }
+totalCalories = guessCalories; totalProtein = guessProtein; totalCarbs = guessCarbs; totalFat = guessFat;
+}
+
+return {
+calories: Math.round(totalCalories),
+protein: Math.round(totalProtein),
+carbs: Math.round(totalCarbs),
+fat: Math.round(totalFat),
+items: foundItems
+};
+}
+
+function addMeal() {
+const input = document.getElementById('mealInput');
+if (!input.value.trim()) return;
+
+const analysis = analyzeWithAI(input.value);
+const newMeal = {
+id: Date.now(),
+description: analysis.items.join(' + '),
+calories: analysis.calories,
+protein: analysis.protein,
+carbs: analysis.carbs,
+fat: analysis.fat,
+time: new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })
+};
+
+meals.push(newMeal);
+localStorage.setItem('nutritionMeals', JSON.stringify(meals));
+input.value = '';
+updateDisplay();
+}
+
+function deleteMeal(id) {
+meals = meals.filter(meal => meal.id !== id);
+localStorage.setItem('nutritionMeals', JSON.stringify(meals));
+updateDisplay();
+}
+
+function clearDay() {
+if (confirm('האם אתה בטוח שברצונך למחוק את כל הארוחות?')) {
+meals = [];
+localStorage.setItem('nutritionMeals', JSON.stringify(meals));
+updateDisplay();
+}
+}
+
+function updateDisplay() {
+dailyGoal = parseInt(document.getElementById('dailyGoal').value);
+localStorage.setItem('dailyGoal', dailyGoal.toString());
+
+const total = meals.reduce((sum, meal) => ({
+calories: sum.calories + meal.calories,
+protein: sum.protein + meal.protein,
+carbs: sum.carbs + meal.carbs,
+fat: sum.fat + meal.fat
+}), { calories: 0, protein: 0, carbs: 0, fat: 0 });
+
+document.getElementById('totalDisplay').innerHTML = `<strong>${total.calories}/${dailyGoal}</strong>`;
+document.getElementById('progressFill').style.width = `${Math.min((total.calories / dailyGoal) * 100, 100)}%`;
+document.getElementById('proteinTotal').textContent = `${total.protein}ג`;
+document.getElementById('carbsTotal').textContent = `${total.carbs}ג`;
+document.getElementById('fatTotal').textContent = `${total.fat}ג`;
+
+// רשימת ארוחות
+const mealsContainer = document.getElementById('mealsContainer');
+const mealsList = document.getElementById('mealsList');
+
+if (meals.length > 0) {
+mealsContainer.classList.remove('hidden');
+mealsList.innerHTML = meals.map(meal => `
+<div class="meal-item">
+<div>
+<div style="font-weight: bold;">${meal.description}</div>
+<div style="font-size: 0.9rem; color: #666;">${meal.time}</div>
+</div>
+<div style="text-align: center;">
+<div style="font-size: 1.3rem; font-weight: bold; color: #667eea;">${meal.calories} קלוריות</div>
+<div style="font-size: 0.8rem; color: #666;">ח${meal.protein} | פ${meal.carbs} | ש${meal.fat}</div>
+</div>
+<button onclick="deleteMeal(${meal.id})" style="background: #dc3545; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;">✕</button>
+</div>
+`).join('');
+} else {
+mealsContainer.classList.add('hidden');
+}
+
+updateRecommendations();
+}
+
+function toggleRecommendations() {
+const rec = document.getElementById('recommendations');
+rec.classList.toggle('hidden');
+}
+
+function updateRecommendations() {
+const total = meals.reduce((sum, meal) => sum + meal.calories, 0);
+const remaining = dailyGoal - total;
+let recommendations = [];
+
+if (remaining <= 0) recommendations.push('🎯 השגת את היעד המושלם!');
+else if (remaining > 800) recommendations.push('🍔 המבורגר מלא (850 קל\')');
+else if (remaining > 600) recommendations.push('🥙 שווארמה מלאה (650 קל\')');
+else if (remaining > 300) recommendations.push('🍗 שניצל עם תוספות (320 קל\')');
+else if (remaining > 150) recommendations.push('🥪 בורקס טעים (300 קל\')');
+else recommendations.push('🍎 חטיף קל וטעים');
+
+document.getElementById('recommendationsList').innerHTML = `
+<div style="background: rgba(255,255,255,0.9); padding: 12px; border-radius: 8px; margin-bottom: 15px; color: #333;">
+🎯 נותרו <strong>${Math.max(0, remaining)} קלוריות</strong> להשלמת היעד
+</div>
+${recommendations.map(rec => `<div style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-right: 4px solid #fd7e14; color: #333;">${rec}</div>`).join('')}
+`;
+}
+
+// Event listeners
+document.getElementById('mealInput').addEventListener('keypress', function(e) {
+if (e.key === 'Enter') addMeal();
+});
+
+document.getElementById('dailyGoal').addEventListener('change', updateDisplay);
+
+// עדכון ראשוני
+updateDisplay();
+</script>
+</body>
+</html>
 ```
